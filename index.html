@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e8590c">
+<title>Đánh giá chất lượng bữa ăn</title>
+<style>
+:root{
+  --orange:#e8590c; --orange-l:#ff8a3d; --amber:#f59f00;
+  --green:#2f9e44; --red:#e03131;
+  --ink:#2f2419; --muted:#8d7b69;
+  --line:#f0e2d3; --bg:#fdf7f0; --card:#fff;
+  --r:16px;
+  --shadow:0 6px 22px rgba(140,80,20,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink); background:var(--bg);
+  background-image:
+    radial-gradient(900px 380px at 50% -120px,#ffe9d6 0%,rgba(255,233,214,0) 70%),
+    radial-gradient(600px 300px at 100% 100%,#eaf7ec 0%,rgba(234,247,236,0) 70%);
+  background-attachment:fixed;
+  min-height:100vh;
+  padding-bottom:calc(112px + env(safe-area-inset-bottom));
+}
+.app{width:100%;max-width:560px;margin:0 auto;padding:10px 14px 20px}
+
+/* ---------- HERO ---------- */
+.hero{text-align:center;padding:14px 8px 16px}
+.plate{
+  width:74px;height:74px;margin:0 auto 10px;border-radius:50%;
+  display:grid;place-items:center;font-size:34px;
+  background:linear-gradient(145deg,#fff,#ffe8d4);
+  box-shadow:0 8px 20px rgba(232,89,12,.18),
+             inset 0 0 0 6px #fff,
+             inset 0 0 0 8px #ffe3cd;
+}
+.hero h1{margin:0 0 6px;font-size:1.3rem;font-weight:800;letter-spacing:-.3px}
+.hero p{margin:0;color:var(--muted);font-size:.85rem;line-height:1.45}
+.clock{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  padding:7px 15px;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-size:.78rem;font-weight:800;color:var(--orange);
+  box-shadow:var(--shadow);font-variant-numeric:tabular-nums;
+}
+
+/* ---------- CARD ---------- */
+.card{
+  background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:15px;margin-bottom:12px;border:1px solid #f8eee3;
+}
+.sec{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:.92rem;font-weight:800}
+.sec .n{
+  width:22px;height:22px;flex:0 0 22px;border-radius:50%;
+  display:grid;place-items:center;font-size:.7rem;color:#fff;
+  background:linear-gradient(135deg,var(--orange-l),var(--orange));
+}
+
+/* ---------- CHỌN BỮA ĂN (ĐÃ CĂN CHỈNH) ---------- */
+.chips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.chip{
+  flex: 1; /* Tự động chia đều không gian */
+  min-width: 85px; /* Đảm bảo không bị bóp nhỏ trên màn hình hẹp */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border: 1.5px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  text-align: center;
+}
+.chip .e { font-size: 24px; line-height: 1; }
+.chip.active {
+  border-color: var(--orange);
+  background: #fff5ee;
+  color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(232,89,12,.09);
+}
+
+/* ---------- CHẤM ĐIỂM ---------- */
+.stars{display:flex;gap:2px}
+.star{
+  flex:1;display:grid;place-items:center;padding:6px 0;border:0;background:transparent;
+  font-size:34px;line-height:1;color:#eadfd3;cursor:pointer;
+  transition:transform .15s,color .15s;
+}
+.star:active{transform:scale(.85)}
+.star.on{color:var(--amber);filter:drop-shadow(0 4px 8px rgba(245,159,0,.35))}
+.rate-note{
+  margin-top:8px;text-align:center;font-size:.88rem;font-weight:800;
+  color:var(--muted);min-height:22px;transition:color .2s;
+}
+
+/* ---------- FORM ---------- */
+.field{position:relative}
+select{
+  appearance:none;-webkit-appearance:none;width:100%;
+  padding:14px 44px 14px 14px;font-size:16px;font-weight:700;font-family:inherit;
+  color:var(--ink);background:#fff;border:1.5px solid var(--line);
+  border-radius:12px;cursor:pointer;
+}
+select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,89,12,.12)}
+.field::after{
+  content:"";position:absolute;right:17px;top:50%;width:9px;height:9px;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:translateY(-70%) rotate(45deg);pointer-events:none;
+}
+.hint{margin-top:9px;font-size:.75rem;color:var(--muted);line-height:1.4}
+.hint b{color:var(--orange);font-variant-numeric:tabular-nums;letter-spacing:.5px}
+
+textarea{
+  width:100%;min-height:106px;padding:12px 14px;font-family:inherit;
+  font-size:16px;line-height:1.55;color:var(--ink);
+  border:1.5px solid var(--line);border-radius:12px;background:#fff;resize:vertical;
+}
+textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,89,12,.12)}
+.counter{text-align:right;font-size:.72rem;color:var(--muted);margin-top:6px}
+
+/* ---------- ẢNH ---------- */
+.upload{
+  display:flex;align-items:center;gap:11px;padding:14px;
+  border:2px dashed #e8d5c2;border-radius:13px;background:#fffdfa;
+  cursor:pointer;transition:.2s;
+}
+.upload:active{background:#fff4ea;border-color:var(--orange)}
+.upload .ico{font-size:22px;line-height:1}
+.upload .txt{font-size:.85rem;font-weight:700;color:var(--muted)}
+.preview{position:relative;margin-top:11px;display:none}
+.preview img{width:100%;max-height:230px;object-fit:cover;border-radius:13px;display:block}
+.preview .del{
+  position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;
+  border:0;background:rgba(0,0,0,.62);color:#fff;font-size:15px;cursor:pointer;
+  display:grid;place-items:center;line-height:1;
+}
+
+/* ---------- NÚT GỬI (CỐ ĐỊNH DƯỚI) ---------- */
+.submit-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,var(--bg) 55%,rgba(253,247,240,.82) 100%);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.submit-bar .inner{max-width:560px;margin:0 auto}
+.btn{
+  width:100%;padding:16px;border:0;border-radius:14px;font-family:inherit;
+  font-size:1.02rem;font-weight:800;color:#fff;cursor:pointer;
+  background:linear-gradient(135deg,#ff9a4d,var(--orange));
+  box-shadow:0 10px 22px rgba(232,89,12,.32);
+  transition:transform .12s,box-shadow .2s,opacity .2s;
+}
+.btn:active{transform:translateY(1px) scale(.995)}
+.btn:disabled{opacity:.65;cursor:not-allowed;box-shadow:none}
+
+/* ---------- BIÊN NHẬN ---------- */
+.receipt{
+  margin:2px 0 12px;padding:16px;border-radius:var(--r);
+  background:linear-gradient(#f4fbf5,#fff);
+  border:1.5px dashed #cfe8d4;box-shadow:var(--shadow);
+  animation:pop .3s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.receipt h3{
+  margin:0 0 10px;font-size:.95rem;color:var(--green);
+  display:flex;gap:8px;align-items:center;
+}
+.row{
+  display:flex;justify-content:space-between;gap:14px;
+  padding:8px 0;font-size:.85rem;border-bottom:1px dashed #e3f0e5;
+}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row span{color:var(--muted);flex:0 0 auto}
+.row b{text-align:right;font-weight:800}
+
+/* ---------- TOAST ---------- */
+.toast{
+  position:fixed;left:50%;top:16px;transform:translate(-50%,-24px);
+  max-width:calc(100% - 32px);padding:13px 18px;border-radius:14px;
+  background:#2f9e44;color:#fff;font-size:.9rem;font-weight:700;text-align:center;
+  box-shadow:0 10px 26px rgba(0,0,0,.2);opacity:0;visibility:hidden;z-index:200;
+  transition:opacity .25s,transform .25s,visibility .25s;
+}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.toast.error{background:#e03131}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="plate">🍽️</div>
+    <h1>Đánh giá chất lượng bữa ăn</h1>
+    <p>Phản hồi của bạn giúp nhà bếp phục vụ tốt hơn mỗi ngày</p>
+    <div class="clock">⏰ <span id="liveClock">--:--:--</span></div>
+  </div>
+
+  <form id="evalForm" novalidate>
+
+    <!-- 1. BỮA ĂN -->
+    <div class="card">
+      <div class="sec"><span class="n">1</span>Bữa ăn nào?</div>
+      <div class="chips" id="mealChips">
+        <!-- Đã rút gọn thành 3 nút giống như ảnh chụp của bạn -->
+        <label class="chip active">
+          <input type="radio" name="meal" value="Bữa sáng" checked hidden>
+          <span class="e">🌅</span><span>Bữa sáng</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="meal" value="Bữa trưa" hidden>
+          <span class="e">☀️</span><span>Bữa trưa</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="meal" value="Bữa tối" hidden>
+          <span class="e">🌙</span><span>Bữa tối</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. CHẤT LƯỢNG -->
+    <div class="card">
+      <div class="sec"><span class="n">2</span>Chất lượng bữa ăn</div>
+      <div class="stars" id="stars">
+        <button type="button" class="star" data-v="1" aria-label="1 sao">★</button>
+        <button type="button" class="star" data-v="2" aria-label="2 sao">★</button>
+        <button type="button" class="star" data-v="3" aria-label="3 sao">★</button>
+        <button type="button" class="star" data-v="4" aria-label="4 sao">★</button>
+        <button type="button" class="star" data-v="5" aria-label="5 sao">★</button>
+      </div>
+      <div class="rate-note" id="rateNote">Chạm vào sao để chấm điểm</div>
+    </div>
+
+    <!-- 3. NGƯỜI NHẬN -->
+    <div class="card">
+      <div class="sec"><span class="n">3</span>Gửi đến chức vụ</div>
+      <div class="field">
+        <select id="recipient">
+          <option value="">— Chọn chức vụ người nhận —</option>
+        </select>
+      </div>
+      <div class="hint" id="idHint">Chọn chức vụ để hệ thống tự xác định mã người nhận</div>
+    </div>
+
+    <!-- 4. NỘI DUNG -->
+    <div class="card">
+      <div class="sec"><span class="n">4</span>Nội dung đánh giá</div>
+      <textarea id="messageText" maxlength="1000"
+        placeholder="Ví dụ: Cơm vừa chín tới, canh nêm hơi mặn, rau tươi và trình bày đẹp..."></textarea>
+      <div class="counter"><span id="charCount">0</span>/1000</div>
+    </div>
+
+    <!-- 5. ẢNH -->
+    <div class="card">
+      <div class="sec"><span class="n">5</span>Ảnh đính kèm <span style="font-weight:600;color:var(--muted);font-size:.78rem">(tùy chọn)</span></div>
+      <label class="upload" for="imageInput">
+        <span class="ico">📷</span>
+        <span class="txt">Chụp ảnh hoặc chọn ảnh bữa ăn</span>
+      </label>
+      <input type="file" id="imageInput" accept="image/*" hidden>
+      <div class="preview" id="preview">
+        <img id="imagePreview" alt="Xem trước ảnh">
+        <button type="button" class="del" id="removeImg" aria-label="Xóa ảnh">✕</button>
+      </div>
+    </div>
+
+    <!-- BIÊN NHẬN -->
+    <div class="receipt" id="receipt" hidden>
+      <h3>✅ Đã gửi đánh giá đến Zalo</h3>
+      <div class="row"><span>Người nhận</span><b id="rName">—</b></div>
+      <div class="row"><span>Thời gian gửi</span><b id="rTime">—</b></div>
+      <div class="row"><span>Bữa ăn</span><b id="rMeal">—</b></div>
+      <div class="row"><span>Chất lượng</span><b id="rRate">—</b></div>
+    </div>
+
+    <!-- NÚT GỬI -->
+    <div class="submit-bar">
+      <div class="inner">
+        <button class="btn" id="submitBtn" type="submit">📨 Gửi đánh giá</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     1. CẤU HÌNH
+     ========================================================= */
+  const PROXY_URL = 'https://script.google.com/macros/s/AKfycbxv7ofh5MVmZCUK78KOZfMEjX-Ontwm7Xe-dinS94nTmGl3VgDWbFbsEUguxkUBxLXV/exec';
+
+  const RECIPIENTS = {
+    chunhiem: { name: 'Chủ nhiệm Hậu cần - Kỹ thuật',                   id: 'c91bf382bbcb52950bda' },
+    phochunhiem:    { name: 'Phó Chủ nhiệm Hậu cần - Kỹ thuật',               id: '3fded422ae7e47201e6f' },
+    troly:       { name: 'Trợ lý Hậu cần',   id: 'ac5468031c56f508ac47' },
+    quanly:   { name: 'Quản lý Bếp',                     id: 'DIEN_CHAT_ID_GIAM_DOC' },
+  
+  };
+
+  const RATE = {
+    1: { label: 'Rất kém',     emoji: '😖', color: '#e03131' },
+    2: { label: 'Kém',         emoji: '🙁', color: '#f03e3e' },
+    3: { label: 'Bình thường', emoji: '😐', color: '#f59f00' },
+    4: { label: 'Ngon',        emoji: '😊', color: '#37b24d' },
+    5: { label: 'Xuất sắc',    emoji: '🤩', color: '#2f9e44' }
+  };
+
+  /* =========================================================
+     2. TIỆN ÍCH
+     ========================================================= */
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2, '0');
+
+  function fmtTime(d) {
+    return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds())
+         + ' - ' + pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+
+  function maskId(id) {
+    if (!id) return '—';
+    if (id.length <= 6) return id;
+    return id.slice(0, 4) + '••••' + id.slice(-4);
+  }
+
+  /* =========================================================
+     3. ĐỒNG HỒ THỜI GIAN THỰC
+     ========================================================= */
+  const liveClock = $('liveClock');
+  function tick() { liveClock.textContent = fmtTime(new Date()); }
+  tick();
+  setInterval(tick, 1000);
+
+  /* =========================================================
+     4. TOAST
+     ========================================================= */
+  const toastEl = $('toast');
+  let toastTimer;
+  function showToast(msg, isError) {
+    toastEl.textContent = msg;
+    toastEl.classList.toggle('error', !!isError);
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2800);
+  }
+
+  /* =========================================================
+     5. CHỌN BỮA ĂN
+     ========================================================= */
+  const chips = document.querySelectorAll('#mealChips .chip');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      chip.querySelector('input').checked = true;
+    });
+  });
+
+  /* =========================================================
+     6. CHẤM ĐIỂM SAO
+     ========================================================= */
+  let rating = 0;
+  const starBtns = document.querySelectorAll('#stars .star');
+  const rateNote = $('rateNote');
+
+  starBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      rating = Number(btn.dataset.v);
+      starBtns.forEach(b => b.classList.toggle('on', Number(b.dataset.v) <= rating));
+      const r = RATE[rating];
+      rateNote.textContent = r.emoji + ' ' + r.label;
+      rateNote.style.color = r.color;
+    });
+  });
+
+  function resetStars() {
+    rating = 0;
+    starBtns.forEach(b => b.classList.remove('on'));
+    rateNote.textContent = 'Chạm vào sao để chấm điểm';
+    rateNote.style.color = 'var(--muted)';
+  }
+
+  /* =========================================================
+     7. CHỌN NGƯỜI NHẬN (CHỨC VỤ ➜ CHAT ID)
+     ========================================================= */
+  const selRecipient = $('recipient');
+  const idHint = $('idHint');
+
+  Object.keys(RECIPIENTS).forEach(key => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = RECIPIENTS[key].name;
+    selRecipient.appendChild(opt);
+  });
+
+  selRecipient.addEventListener('change', () => {
+    const r = RECIPIENTS[selRecipient.value];
+    if (!r) {
+      idHint.innerHTML = 'Chọn chức vụ để hệ thống tự xác định mã người nhận';
+      return;
+    }
+    idHint.innerHTML = 'Mã người nhận: <b>' + maskId(r.id) + '</b>';
+  });
+
+  /* =========================================================
+     8. ĐẾM KÝ TỰ
+     ========================================================= */
+  const messageText = $('messageText');
+  const charCount = $('charCount');
+  messageText.addEventListener('input', () => {
+    charCount.textContent = messageText.value.length;
+  });
+
+  /* =========================================================
+     9. ẢNH
+     ========================================================= */
+  const imageInput = $('imageInput');
+  const preview = $('preview');
+  const imagePreview = $('imagePreview');
+
+  imageInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      imagePreview.src = ev.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  $('removeImg').addEventListener('click', () => {
+    imageInput.value = '';
+    imagePreview.src = '';
+    preview.style.display = 'none';
+  });
+
+  function resizeImage(file, maxW, maxH) {
+    maxW = maxW || 1200; maxH = maxH || 1200;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } }
+          else       { if (h > maxH) { w *= maxH / h; h = maxH; } }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.onerror = reject;
+        img.src = ev.target.result;
+      };
+      reader.onerror = reject;
+    });
+  }
+
+  /* =========================================================
+     10. GỬI
+     ========================================================= */
+  const form = $('evalForm');
+  const submitBtn = $('submitBtn');
+  const receipt = $('receipt');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const recKey = selRecipient.value;
+    const rec = RECIPIENTS[recKey];
+    const text = messageText.value.trim();
+    const file = imageInput.files[0];
+    const mealEl = document.querySelector('input[name="meal"]:checked');
+    const meal = mealEl ? mealEl.value : 'Bữa ăn';
+
+    if (!rec)    { showToast('Vui lòng chọn chức vụ người nhận!', true); return; }
+    if (!rating) { showToast('Vui lòng chấm điểm chất lượng bữa ăn!', true); return; }
+    if (!text)   { showToast('Vui lòng nhập nội dung đánh giá!', true); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = file ? '⏳ Đang nén ảnh & gửi...' : '⏳ Đang gửi...';
+
+    const sentAt = new Date();
+    const timeStr = fmtTime(sentAt);
+    const stars = '⭐'.repeat(rating);
+    const rateInfo = stars + ' (' + RATE[rating].label + ')';
+
+    const fullText =
+      '🍽️ ĐÁNH GIÁ CHẤT LƯỢNG BỮA ĂN\n' +
+      '-*-\n' +
+      '• Bữa ăn: ' + meal + '\n' +
+      '• Chất lượng: ' + rateInfo + '\n' +
+      '• Thời gian: ' + timeStr + '\n' +
+      '-*-\n' +
+	'NỘI DUNG NHẬN XÉT:\n' +
+      text;
+
+    try {
+      let imageBase64 = '';
+      if (file) imageBase64 = await resizeImage(file);
+
+      const response = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          chatId: rec.id,
+          text: fullText,
+          imageBase64: imageBase64
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        onSuccess(rec, meal, rateInfo, new Date());
+      } else {
+        showToast('❌ Lỗi Zalo: ' + (data.description || JSON.stringify(data)), true);
+      }
+    } catch (error) {
+      if (error.name === 'TypeError' && error.message.indexOf('Failed to fetch') !== -1) {
+        onSuccess(rec, meal, rateInfo, new Date());
+      } else {
+        showToast('❌ Lỗi kết nối: ' + error.message, true);
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '📨 Gửi đánh giá';
+    }
+  });
+
+  function onSuccess(rec, meal, rateInfo, sentTime) {
+    $('rName').textContent = rec.name;
+    $('rTime').textContent = fmtTime(sentTime);
+    $('rMeal').textContent = meal;
+    $('rRate').textContent = rateInfo;
+    receipt.hidden = false;
+    receipt.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    showToast('✅ Đã gửi đánh giá tới ' + rec.name + '!');
+
+    form.reset();
+    chips.forEach((c, i) => c.classList.toggle('active', i === 0));
+    resetStars();
+    charCount.textContent = '0';
+    imageInput.value = '';
+    imagePreview.src = '';
+    preview.style.display = 'none';
+    idHint.innerHTML = 'Chọn chức vụ để hệ thống tự xác định mã người nhận';
+  }
+
+})();
+</script>
+</body>
+</html>
