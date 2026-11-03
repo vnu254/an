@@ -3,16 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#e8590c">
+<meta name="theme-color" content="#4B5320">
 <title>Đánh giá chất lượng bữa ăn</title>
 <style>
 :root{
-  --orange:#e8590c; --orange-l:#ff8a3d; --amber:#f59f00;
-  --green:#2f9e44; --red:#e03131;
-  --ink:#2f2419; --muted:#8d7b69;
-  --line:#f0e2d3; --bg:#fdf7f0; --card:#fff;
+  --orange:#4B5320; /* Xanh quân đội (giữ tên biến để không đổi logic) */
+  --orange-l:#6B7B3A;
+  --amber:#C9A227;  /* Vàng đồng (quân đội) */
+  --green:#3E7A3A;
+  --red:#e03131;
+  --ink:#2B2B1F;
+  --muted:#6E7159;
+  --line:#DCE0CB;
+  --bg:#F5F6EC;
+  --card:#fff;
   --r:16px;
-  --shadow:0 6px 22px rgba(140,80,20,.08);
+  --shadow:0 6px 22px rgba(60,70,20,.10);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
@@ -21,8 +27,8 @@ body{
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   color:var(--ink); background:var(--bg);
   background-image:
-    radial-gradient(900px 380px at 50% -120px,#ffe9d6 0%,rgba(255,233,214,0) 70%),
-    radial-gradient(600px 300px at 100% 100%,#eaf7ec 0%,rgba(234,247,236,0) 70%);
+    radial-gradient(900px 380px at 50% -120px,#E4E9CE 0%,rgba(228,233,206,0) 70%),
+    radial-gradient(600px 300px at 100% 100%,#EAF3DC 0%,rgba(234,243,220,0) 70%);
   background-attachment:fixed;
   min-height:100vh;
   padding-bottom:calc(112px + env(safe-area-inset-bottom));
@@ -34,10 +40,10 @@ body{
 .plate{
   width:74px;height:74px;margin:0 auto 10px;border-radius:50%;
   display:grid;place-items:center;font-size:34px;
-  background:linear-gradient(145deg,#fff,#ffe8d4);
-  box-shadow:0 8px 20px rgba(232,89,12,.18),
+  background:linear-gradient(145deg,#fff,#E9EED6);
+  box-shadow:0 8px 20px rgba(75,83,32,.18),
              inset 0 0 0 6px #fff,
-             inset 0 0 0 8px #ffe3cd;
+             inset 0 0 0 8px #DCE4C4;
 }
 .hero h1{margin:0 0 6px;font-size:1.3rem;font-weight:800;letter-spacing:-.3px}
 .hero p{margin:0;color:var(--muted);font-size:.85rem;line-height:1.45}
@@ -51,7 +57,7 @@ body{
 /* ---------- CARD ---------- */
 .card{
   background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
-  padding:15px;margin-bottom:12px;border:1px solid #f8eee3;
+  padding:15px;margin-bottom:12px;border:1px solid #E8EBD9;
 }
 .sec{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:.92rem;font-weight:800}
 .sec .n{
@@ -60,7 +66,7 @@ body{
   background:linear-gradient(135deg,var(--orange-l),var(--orange));
 }
 
-/* ---------- CHỌN BỮA ĂN (ĐÃ CĂN CHỈNH) ---------- */
+/* ---------- CHỌN BỮA ĂN ---------- */
 .chips{
   display: flex;
   flex-wrap: wrap;
@@ -68,8 +74,8 @@ body{
   justify-content: center;
 }
 .chip{
-  flex: 1; /* Tự động chia đều không gian */
-  min-width: 85px; /* Đảm bảo không bị bóp nhỏ trên màn hình hẹp */
+  flex: 1;
+  min-width: 85px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -90,20 +96,20 @@ body{
 .chip .e { font-size: 24px; line-height: 1; }
 .chip.active {
   border-color: var(--orange);
-  background: #fff5ee;
+  background: #F3F6E4;
   color: var(--orange);
-  box-shadow: 0 0 0 3px rgba(232,89,12,.09);
+  box-shadow: 0 0 0 3px rgba(75,83,32,.10);
 }
 
 /* ---------- CHẤM ĐIỂM ---------- */
 .stars{display:flex;gap:2px}
 .star{
   flex:1;display:grid;place-items:center;padding:6px 0;border:0;background:transparent;
-  font-size:34px;line-height:1;color:#eadfd3;cursor:pointer;
+  font-size:34px;line-height:1;color:#DEDCC4;cursor:pointer;
   transition:transform .15s,color .15s;
 }
 .star:active{transform:scale(.85)}
-.star.on{color:var(--amber);filter:drop-shadow(0 4px 8px rgba(245,159,0,.35))}
+.star.on{color:var(--amber);filter:drop-shadow(0 4px 8px rgba(201,162,39,.35))}
 .rate-note{
   margin-top:8px;text-align:center;font-size:.88rem;font-weight:800;
   color:var(--muted);min-height:22px;transition:color .2s;
@@ -117,7 +123,7 @@ select{
   color:var(--ink);background:#fff;border:1.5px solid var(--line);
   border-radius:12px;cursor:pointer;
 }
-select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,89,12,.12)}
+select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(75,83,32,.15)}
 .field::after{
   content:"";position:absolute;right:17px;top:50%;width:9px;height:9px;
   border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
@@ -131,16 +137,16 @@ textarea{
   font-size:16px;line-height:1.55;color:var(--ink);
   border:1.5px solid var(--line);border-radius:12px;background:#fff;resize:vertical;
 }
-textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,89,12,.12)}
+textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(75,83,32,.15)}
 .counter{text-align:right;font-size:.72rem;color:var(--muted);margin-top:6px}
 
 /* ---------- ẢNH ---------- */
 .upload{
   display:flex;align-items:center;gap:11px;padding:14px;
-  border:2px dashed #e8d5c2;border-radius:13px;background:#fffdfa;
+  border:2px dashed #CCD5A9;border-radius:13px;background:#FBFCF3;
   cursor:pointer;transition:.2s;
 }
-.upload:active{background:#fff4ea;border-color:var(--orange)}
+.upload:active{background:#F1F4DE;border-color:var(--orange)}
 .upload .ico{font-size:22px;line-height:1}
 .upload .txt{font-size:.85rem;font-weight:700;color:var(--muted)}
 .preview{position:relative;margin-top:11px;display:none}
@@ -155,15 +161,15 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
 .submit-bar{
   position:fixed;left:0;right:0;bottom:0;z-index:60;
   padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-  background:linear-gradient(to top,var(--bg) 55%,rgba(253,247,240,.82) 100%);
+  background:linear-gradient(to top,var(--bg) 55%,rgba(245,246,236,.82) 100%);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
 .submit-bar .inner{max-width:560px;margin:0 auto}
 .btn{
   width:100%;padding:16px;border:0;border-radius:14px;font-family:inherit;
   font-size:1.02rem;font-weight:800;color:#fff;cursor:pointer;
-  background:linear-gradient(135deg,#ff9a4d,var(--orange));
-  box-shadow:0 10px 22px rgba(232,89,12,.32);
+  background:linear-gradient(135deg,#6B7B3A,var(--orange));
+  box-shadow:0 10px 22px rgba(75,83,32,.32);
   transition:transform .12s,box-shadow .2s,opacity .2s;
 }
 .btn:active{transform:translateY(1px) scale(.995)}
@@ -172,8 +178,8 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
 /* ---------- BIÊN NHẬN ---------- */
 .receipt{
   margin:2px 0 12px;padding:16px;border-radius:var(--r);
-  background:linear-gradient(#f4fbf5,#fff);
-  border:1.5px dashed #cfe8d4;box-shadow:var(--shadow);
+  background:linear-gradient(#F4FAF1,#fff);
+  border:1.5px dashed #C9DEC0;box-shadow:var(--shadow);
   animation:pop .3s ease;
 }
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -183,7 +189,7 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
 }
 .row{
   display:flex;justify-content:space-between;gap:14px;
-  padding:8px 0;font-size:.85rem;border-bottom:1px dashed #e3f0e5;
+  padding:8px 0;font-size:.85rem;border-bottom:1px dashed #E1EBD9;
 }
 .row:last-child{border-bottom:0;padding-bottom:0}
 .row span{color:var(--muted);flex:0 0 auto}
@@ -193,7 +199,7 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
 .toast{
   position:fixed;left:50%;top:16px;transform:translate(-50%,-24px);
   max-width:calc(100% - 32px);padding:13px 18px;border-radius:14px;
-  background:#2f9e44;color:#fff;font-size:.9rem;font-weight:700;text-align:center;
+  background:var(--green);color:#fff;font-size:.9rem;font-weight:700;text-align:center;
   box-shadow:0 10px 26px rgba(0,0,0,.2);opacity:0;visibility:hidden;z-index:200;
   transition:opacity .25s,transform .25s,visibility .25s;
 }
@@ -219,9 +225,8 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
 
     <!-- 1. BỮA ĂN -->
     <div class="card">
-      <div class="sec"><span class="n">1</span>Bữa ăn nào?</div>
+      <div class="sec"><span class="n">1</span>Chọn bữa ăn đánh giá</div>
       <div class="chips" id="mealChips">
-        <!-- Đã rút gọn thành 3 nút giống như ảnh chụp của bạn -->
         <label class="chip active">
           <input type="radio" name="meal" value="Bữa sáng" checked hidden>
           <span class="e">🌅</span><span>Bữa sáng</span>
@@ -252,7 +257,7 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
 
     <!-- 3. NGƯỜI NHẬN -->
     <div class="card">
-      <div class="sec"><span class="n">3</span>Gửi đến chức vụ</div>
+      <div class="sec"><span class="n">3</span>Gửi đến</div>
       <div class="field">
         <select id="recipient">
           <option value="">— Chọn chức vụ người nhận —</option>
@@ -315,16 +320,16 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
     chunhiem: { name: 'Chủ nhiệm Hậu cần - Kỹ thuật',                   id: 'c91bf382bbcb52950bda' },
     phochunhiem:    { name: 'Phó Chủ nhiệm Hậu cần - Kỹ thuật',               id: '3fded422ae7e47201e6f' },
     troly:       { name: 'Trợ lý Hậu cần',   id: 'ac5468031c56f508ac47' },
-    quanly:   { name: 'Quản lý Bếp',                     id: 'DIEN_CHAT_ID_GIAM_DOC' },
+    quanly:   { name: 'Quản lý Bếp',                     id: 'zgr-5b52b43c5153b80de142' },
   
   };
 
   const RATE = {
     1: { label: 'Rất kém',     emoji: '😖', color: '#e03131' },
     2: { label: 'Kém',         emoji: '🙁', color: '#f03e3e' },
-    3: { label: 'Bình thường', emoji: '😐', color: '#f59f00' },
+    3: { label: 'Bình thường', emoji: '😐', color: '#C9A227' },
     4: { label: 'Ngon',        emoji: '😊', color: '#37b24d' },
-    5: { label: 'Xuất sắc',    emoji: '🤩', color: '#2f9e44' }
+    5: { label: 'Xuất sắc',    emoji: '🤩', color: '#3E7A3A' }
   };
 
   /* =========================================================
