@@ -260,7 +260,7 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
       <div class="sec"><span class="n">3</span>Gửi đến</div>
       <div class="field">
         <select id="recipient">
-          <option value="">— Chọn chức vụ người nhận —</option>
+          <option value="">— Bấm vào đây để chọn —</option>
         </select>
       </div>
       <div class="hint" id="idHint">Chọn chức vụ để hệ thống tự xác định mã người nhận</div>
@@ -317,10 +317,11 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
   const PROXY_URL = 'https://script.google.com/macros/s/AKfycbxv7ofh5MVmZCUK78KOZfMEjX-Ontwm7Xe-dinS94nTmGl3VgDWbFbsEUguxkUBxLXV/exec';
 
   const RECIPIENTS = {
+	  nhom: { name: 'Nhóm báo chất lượng bữa ăn',                   id: 'zgr-b58ce22f0340ea1eb351' },
     chunhiem: { name: 'Chủ nhiệm Hậu cần - Kỹ thuật',                   id: 'c91bf382bbcb52950bda' },
     phochunhiem:    { name: 'Phó Chủ nhiệm Hậu cần - Kỹ thuật',               id: '3fded422ae7e47201e6f' },
     troly:       { name: 'Trợ lý Hậu cần',   id: 'ac5468031c56f508ac47' },
-    quanly:   { name: 'Quản lý Bếp',                     id: 'zgr-5b52b43c5153b80de142' },
+    
   
   };
 
@@ -520,7 +521,7 @@ textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba
       '• Chất lượng: ' + rateInfo + '\n' +
       '• Thời gian: ' + timeStr + '\n' +
       '-*-\n' +
-	'NỘI DUNG NHẬN XÉT:\n' +
+	'NỘI DUNG GÓP Ý:\n' +
       text;
 
     try {
