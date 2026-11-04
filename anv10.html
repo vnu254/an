@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#4B5320">
+<title>Đánh giá chất lượng bữa ăn</title>
+<style>
+:root{
+  --orange:#4B5320;
+  --orange-l:#6B7B3A;
+  --amber:#C9A227;
+  --green:#3E7A3A;
+  --red:#e03131;
+  --ink:#2B2B1F;
+  --muted:#6E7159;
+  --line:#DCE0CB;
+  --bg:#F5F6EC;
+  --card:#fff;
+  --r:16px;
+  --shadow:0 6px 22px rgba(60,70,20,.10);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink); background:var(--bg);
+  background-image:
+    radial-gradient(900px 380px at 50% -120px,#E4E9CE 0%,rgba(228,233,206,0) 70%),
+    radial-gradient(600px 300px at 100% 100%,#EAF3DC 0%,rgba(234,243,220,0) 70%);
+  background-attachment:fixed; min-height:100vh; padding-bottom:calc(112px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+/* CHỐNG CUỘN NỀN KHI MỞ MODAL */
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+
+.app{width:100%;max-width:560px;margin:0 auto;padding:10px 14px 20px}
+.hero{text-align:center;padding:14px 8px 16px}
+.plate{
+  width:74px;height:74px;margin:0 auto 10px;border-radius:50%;
+  display:grid;place-items:center;font-size:34px;
+  background:linear-gradient(145deg,#fff,#E9EED6);
+  box-shadow:0 8px 20px rgba(75,83,32,.18), inset 0 0 0 6px #fff, inset 0 0 0 8px #DCE4C4;
+}
+.hero h1{margin:0 0 6px;font-size:1.3rem;font-weight:800;letter-spacing:-.3px}
+.hero p{margin:0;color:var(--muted);font-size:.85rem;line-height:1.45}
+.clock{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  padding:7px 15px;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-size:.78rem;font-weight:800;color:var(--orange); box-shadow:var(--shadow);font-variant-numeric:tabular-nums;
+}
+.card{
+  background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:15px;margin-bottom:12px;border:1px solid #E8EBD9;
+}
+.sec{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:.92rem;font-weight:800}
+.sec .n{
+  width:22px;height:22px;flex:0 0 22px;border-radius:50%;
+  display:grid;place-items:center;font-size:.7rem;color:#fff;
+  background:linear-gradient(135deg,var(--orange-l),var(--orange));
+}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.chip{
+  flex:1;min-width:85px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:6px;padding:12px 6px;
+  border:1.5px solid var(--line);border-radius:13px;background:#fff;
+  font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;
+  transition:all .2s ease;user-select:none;text-align:center;
+}
+.chip .e{font-size:24px;line-height:1}
+.chip.active{
+  border-color:var(--orange);background:#F3F6E4;color:var(--orange);
+  box-shadow:0 0 0 3px rgba(75,83,32,.10);
+}
+.stars{display:flex;gap:2px}
+.star{
+  flex:1;display:grid;place-items:center;padding:6px 0;border:0;background:transparent;
+  font-size:34px;line-height:1;color:#DEDCC4;cursor:pointer; transition:transform .15s,color .15s;
+}
+.star:active{transform:scale(.85)}
+.star.on{color:var(--amber);filter:drop-shadow(0 4px 8px rgba(201,162,39,.35))}
+.rate-note{
+  margin-top:8px;text-align:center;font-size:.88rem;font-weight:800;
+  color:var(--muted);min-height:22px;transition:color .2s;
+}
+.field{position:relative}
+select{
+  appearance:none;-webkit-appearance:none;width:100%;
+  padding:14px 44px 14px 14px;font-size:16px;font-weight:700;font-family:inherit;
+  color:var(--ink);background:#fff;border:1.5px solid var(--line);
+  border-radius:12px;cursor:pointer;
+}
+select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(75,83,32,.15)}
+.field::after{
+  content:"";position:absolute;right:17px;top:50%;width:9px;height:9px;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:translateY(-70%) rotate(45deg);pointer-events:none;
+}
+.hint{margin-top:9px;font-size:.75rem;color:var(--muted);line-height:1.4}
+.hint b{color:var(--orange);font-variant-numeric:tabular-nums;letter-spacing:.5px}
+textarea{
+  width:100%;min-height:106px;padding:12px 14px;font-family:inherit;
+  font-size:16px;line-height:1.55;color:var(--ink);
+  border:1.5px solid var(--line);border-radius:12px;background:#fff;resize:vertical;
+}
+textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(75,83,32,.15)}
+.counter{text-align:right;font-size:.72rem;color:var(--muted);margin-top:6px}
+.upload{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:20px 14px;border:2px dashed #CCD5A9;border-radius:13px;background:#FBFCF3;
+  cursor:pointer;transition:.2s;
+}
+.upload:active{background:#F1F4DE;border-color:var(--orange)}
+.upload .ico{font-size:24px;line-height:1}
+.upload .txt{font-size:.92rem;font-weight:700;color:var(--muted)}
+.preview-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(95px,1fr)); gap:8px; margin-top:12px;
+}
+.preview-grid:empty{display:none}
+.preview-item{
+  position:relative;aspect-ratio:1;border-radius:11px;overflow:hidden;
+  background:#F1F4DE;box-shadow:0 2px 8px rgba(60,70,20,.08);
+}
+.preview-item img{width:100%;height:100%;object-fit:cover;display:block}
+.preview-item .del{
+  position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;
+  border:0;background:rgba(0,0,0,.68);color:#fff;font-size:13px;cursor:pointer;
+  display:grid;place-items:center;line-height:1;padding:0; backdrop-filter:blur(4px);
+}
+.preview-item .del:active{background:rgba(224,49,49,.9)}
+.photo-count{
+  font-size:.78rem;color:var(--orange);margin-top:10px; text-align:center;font-weight:700;min-height:18px;
+}
+.submit-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:60; padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,var(--bg) 55%,rgba(245,246,236,.82) 100%);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.submit-bar .inner{max-width:560px;margin:0 auto}
+.btn{
+  width:100%;padding:16px;border:0;border-radius:14px;font-family:inherit;
+  font-size:1.02rem;font-weight:800;color:#fff;cursor:pointer;
+  background:linear-gradient(135deg,#6B7B3A,var(--orange)); box-shadow:0 10px 22px rgba(75,83,32,.32);
+  transition:transform .12s,box-shadow .2s,opacity .2s;
+}
+.btn:active{transform:translateY(1px) scale(.995)}
+.btn:disabled{opacity:.65;cursor:not-allowed;box-shadow:none}
+.receipt{
+  margin:2px 0 12px;padding:16px;border-radius:var(--r); background:linear-gradient(#F4FAF1,#fff);
+  border:1.5px dashed #C9DEC0;box-shadow:var(--shadow); animation:pop .3s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.receipt h3{margin:0 0 10px;font-size:.95rem;color:var(--green);display:flex;gap:8px;align-items:center;}
+.row{
+  display:flex;justify-content:space-between;gap:14px; padding:8px 0;font-size:.85rem;border-bottom:1px dashed #E1EBD9;
+}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row span{color:var(--muted);flex:0 0 auto}
+.row b{text-align:right;font-weight:800}
+.toast{
+  position:fixed;left:50%;top:16px;transform:translate(-50%,-24px);
+  max-width:calc(100% - 32px);padding:13px 18px;border-radius:14px;
+  background:var(--green);color:#fff;font-size:.9rem;font-weight:700;text-align:center;
+  box-shadow:0 10px 26px rgba(0,0,0,.2);opacity:0;visibility:hidden;z-index:600;
+  transition:opacity .25s,transform .25s,visibility .25s;
+}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.toast.error{background:#e03131}
+
+/* ADMIN TRIGGER */
+#adminTrigger {
+  position: fixed; right: 12px; bottom: 90px; width: 44px; height: 44px; border-radius: 50%;
+  background: #fff; border: 1px solid var(--line); color: var(--muted); font-size: 20px;
+  display: grid; place-items: center; cursor: pointer; opacity: 0.3; transition: opacity 0.3s; z-index: 50;
+  padding: 0;
+}
+#adminTrigger:hover { opacity: 0.9; }
+
+/* MODAL (POPUP) */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center; z-index: 300;
+  opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s;
+  padding: 16px;
+}
+.modal-overlay.show { opacity: 1; visibility: visible; }
+.modal-box {
+  background: #fff; width: 100%; max-width: 360px; border-radius: 16px; padding: 20px;
+  position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.2s;
+  max-height: 90dvh; overflow-y: auto; /* Chống che khuất bởi bàn phím điện thoại */
+  -webkit-overflow-scrolling: touch;
+}
+.modal-overlay.show .modal-box { transform: translateY(0); }
+.modal-close {
+  position: absolute; top: 12px; right: 12px; background: transparent; border: none;
+  font-size: 20px; color: var(--muted); cursor: pointer; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-title { margin: 0 0 15px; font-size: 1.05rem; font-weight: 800; color: var(--orange); display: flex; align-items: center; gap: 8px; }
+.admin-input{
+  width:100%;padding:14px;font-size:16px;font-family:inherit;
+  border:1.5px solid var(--line);border-radius:10px;background:#fff;margin-bottom:14px;
+}
+.admin-input:focus{outline:none;border-color:#4a7ab8;box-shadow:0 0 0 3px rgba(74,122,184,.15)}
+.btn-admin-dl {
+  width: 100%; padding: 14px; border: 0; border-radius: 10px; background: var(--orange);
+  color: #fff; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+  display: flex; justify-content: center; align-items: center; gap: 6px; transition: 0.2s;
+  margin-bottom: 8px;
+}
+.btn-admin-dl:last-child { margin-bottom: 0; }
+.btn-admin-dl:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-test { background: #f59f00; }
+.btn-view { background: #1c7ed6; }
+
+/* PREVIEW TOÀN MÀN HÌNH */
+.preview-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 100vh;
+  height: 100dvh; /* Tối ưu cho thanh địa chỉ động trên mobile */
+  z-index: 400;
+  background: #F5F6EC;
+  display: none;
+  flex-direction: column;
+}
+.preview-overlay.show { display: flex; }
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--orange);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  padding-top: calc(10px + env(safe-area-inset-top));
+}
+.preview-title {
+  flex: 1;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.preview-btn {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.15s;
+}
+.preview-btn:hover { background: rgba(255,255,255,0.3); }
+.preview-iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #F5F6EC;
+  -webkit-overflow-scrolling: touch;
+}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="app">
+  <div class="hero">
+    <div class="plate">🍽️</div>
+    <h1>Đánh giá chất lượng bữa ăn</h1>
+    <p>Phản hồi của bạn giúp nhà bếp phục vụ tốt hơn mỗi ngày</p>
+    <div class="clock">⏰ <span id="liveClock">--:--:--</span></div>
+  </div>
+
+  <form id="evalForm" novalidate>
+    <div class="card">
+      <div class="sec"><span class="n">1</span>Chọn bữa ăn đánh giá</div>
+      <div class="chips" id="mealChips">
+        <label class="chip active">
+          <input type="radio" name="meal" value="Bữa sáng" checked hidden>
+          <span class="e">🌅</span><span>Bữa sáng</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="meal" value="Bữa trưa" hidden>
+          <span class="e">☀️</span><span>Bữa trưa</span>
+        </label>
+        <label class="chip">
+          <input type="radio" name="meal" value="Bữa tối" hidden>
+          <span class="e">🌙</span><span>Bữa tối</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec"><span class="n">2</span>Chất lượng bữa ăn</div>
+      <div class="stars" id="stars">
+        <button type="button" class="star" data-v="1">★</button>
+        <button type="button" class="star" data-v="2">★</button>
+        <button type="button" class="star" data-v="3">★</button>
+        <button type="button" class="star" data-v="4">★</button>
+        <button type="button" class="star" data-v="5">★</button>
+      </div>
+      <div class="rate-note" id="rateNote">Chạm vào sao để chấm điểm</div>
+    </div>
+
+    <div class="card">
+      <div class="sec"><span class="n">3</span>Gửi đến</div>
+      <div class="field">
+        <select id="recipient">
+          <option value="">— Bấm vào đây để chọn —</option>
+        </select>
+      </div>
+      <div class="hint" id="idHint">Bấm chọn để hệ thống tự xác định mã người nhận</div>
+    </div>
+
+    <div class="card">
+      <div class="sec"><span class="n">4</span>Nội dung đánh giá</div>
+      <textarea id="messageText" maxlength="1000"
+        placeholder="Ví dụ: Cơm vừa chín tới, canh nêm hơi mặn, rau tươi và trình bày đẹp, dụng cụ cấp dưỡng, thái độ phục vụ, thái độ người ăn..."></textarea>
+      <div class="counter"><span id="charCount">0</span>/1000</div>
+    </div>
+
+    <div class="card">
+      <div class="sec"><span class="n">5</span>Ảnh đính kèm <span style="font-weight:600;color:var(--red);font-size:.78rem">(bắt buộc)</span></div>
+      <label class="upload" for="imageInput">
+        <span class="ico">📷</span>
+        <span class="txt" id="uploadTxt">Chụp ảnh hoặc chọn từ thư viện</span>
+      </label>
+      <input type="file" id="imageInput" accept="image/*" multiple hidden>
+      <div class="preview-grid" id="previewGrid"></div>
+      <div class="photo-count" id="photoCount"></div>
+    </div>
+
+    <div class="receipt" id="receipt" hidden>
+      <h3>✅ Đã gửi đánh giá đến Zalo</h3>
+      <div class="row"><span>Người nhận</span><b id="rName">—</b></div>
+      <div class="row"><span>Thời gian gửi</span><b id="rTime">—</b></div>
+      <div class="row"><span>Bữa ăn</span><b id="rMeal">—</b></div>
+      <div class="row"><span>Chất lượng</span><b id="rRate">—</b></div>
+      <div class="row"><span>Số ảnh</span><b id="rImages">—</b></div>
+    </div>
+
+    <div class="submit-bar">
+      <div class="inner">
+        <button class="btn" id="submitBtn" type="submit">📨 Gửi đánh giá</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<button id="adminTrigger" title="Quản trị">⚙️</button>
+
+<!-- POPUP QUẢN TRỊ -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeAdminModal">✕</button>
+    <h3 class="modal-title">🔐 Quản trị viên</h3>
+    <p style="font-size:0.8rem; color:var(--muted); margin-top:-5px; margin-bottom:15px;">
+      Nhập mật khẩu để xem/tải toàn bộ đánh giá từ máy chủ.
+    </p>
+    <input type="password" id="adminPwd" class="admin-input" placeholder="Mật khẩu quản trị">
+    <button type="button" id="adminPreviewBtn" class="btn-admin-dl btn-view">👁️ Xem trực tiếp</button>
+    <button type="button" id="adminDownloadBtn" class="btn-admin-dl">📥 Tải file về máy</button>
+    <button type="button" id="testZaloBtn" class="btn-admin-dl btn-test">🧪 Test Zalo</button>
+  </div>
+</div>
+
+<!-- PREVIEW TOÀN MÀN HÌNH -->
+<div class="preview-overlay" id="previewOverlay">
+  <div class="preview-toolbar">
+    <button class="preview-btn" id="closePreview">✕ Đóng</button>
+    <div class="preview-title" id="previewTitle">📊 Tổng hợp đánh giá</div>
+    <button class="preview-btn" id="downloadFromPreview">📥 Tải về</button>
+  </div>
+  <iframe id="previewFrame" class="preview-iframe" title="Tổng hợp đánh giá"></iframe>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const PROXY_URL = 'https://script.google.com/macros/s/AKfycbwZIPy77lIBCr7jCiGPnInJfyDTad8cvJUPS_wXTFnKjiv1ZIZO6vyZfwhQzgO6ug/exec';
+
+  const RECIPIENTS = {
+    nhom:        { name: 'Nhóm báo chất lượng bữa ăn',         id: 'zgr-b58ce22f0340ea1eb351' },
+    chunhiem:    { name: 'Chủ nhiệm Hậu cần - Kỹ thuật',       id: 'c91bf382bbcb52950bda' },
+    phochunhiem: { name: 'Phó Chủ nhiệm Hậu cần - Kỹ thuật',   id: '3fded422ae7e47201e6f' },
+    troly:       { name: 'Trợ lý Hậu cần',                     id: 'ac5468031c56f508ac47' }
+  };
+
+  const RATE = {
+    1: { label: 'Rất kém', emoji: '😖', color: '#e03131' },
+    2: { label: 'Kém', emoji: '🙁', color: '#f03e3e' },
+    3: { label: 'Bình thường', emoji: '😐', color: '#C9A227' },
+    4: { label: 'Ngon', emoji: '😊', color: '#37b24d' },
+    5: { label: 'Xuất sắc', emoji: '🤩', color: '#3E7A3A' }
+  };
+
+  const MAX_IMAGES = 6;
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2, '0');
+
+  function fmtTime(d) {
+    return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + ' - ' + pad(d.getDate()) + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+  function maskId(id) {
+    if (!id) return '—';
+    return id.length <= 6 ? id : id.slice(0, 4) + '••••' + id.slice(-4);
+  }
+
+  const liveClock = $('liveClock');
+  function tick() { liveClock.textContent = fmtTime(new Date()); }
+  tick(); setInterval(tick, 1000);
+
+  const toastEl = $('toast');
+  let toastTimer;
+  function showToast(msg, isError) {
+    toastEl.textContent = msg; toastEl.classList.toggle('error', !!isError); toastEl.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4000);
+  }
+
+  const chips = document.querySelectorAll('#mealChips .chip');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      chip.querySelector('input').checked = true;
+    });
+  });
+
+  let rating = 0;
+  const starBtns = document.querySelectorAll('#stars .star');
+  const rateNote = $('rateNote');
+  starBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      rating = Number(btn.dataset.v);
+      starBtns.forEach(b => b.classList.toggle('on', Number(b.dataset.v) <= rating));
+      const r = RATE[rating];
+      rateNote.textContent = r.emoji + ' ' + r.label; rateNote.style.color = r.color;
+    });
+  });
+
+  function resetStars() {
+    rating = 0; starBtns.forEach(b => b.classList.remove('on'));
+    rateNote.textContent = 'Chạm vào sao để chấm điểm'; rateNote.style.color = 'var(--muted)';
+  }
+
+  const selRecipient = $('recipient');
+  const idHint = $('idHint');
+  Object.keys(RECIPIENTS).forEach(key => {
+    const opt = document.createElement('option');
+    opt.value = key; opt.textContent = RECIPIENTS[key].name;
+    selRecipient.appendChild(opt);
+  });
+  selRecipient.addEventListener('change', () => {
+    const r = RECIPIENTS[selRecipient.value];
+    idHint.innerHTML = r ? 'Mã người nhận: <b>' + maskId(r.id) + '</b>' : 'Bấm chọn để hệ thống tự xác định mã người nhận';
+  });
+
+  const messageText = $('messageText');
+  const charCount = $('charCount');
+  messageText.addEventListener('input', () => { charCount.textContent = messageText.value.length; });
+
+  const imageInput = $('imageInput');
+  const previewGrid = $('previewGrid');
+  const photoCount = $('photoCount');
+  const uploadTxt = $('uploadTxt');
+  const defaultUploadTxt = uploadTxt.textContent;
+  const images = [];
+
+  function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = ev => resolve(ev.target.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function addFiles(fileList) {
+    const list = Array.from(fileList).filter(f => f.type && f.type.indexOf('image/') === 0);
+    if (list.length === 0) return;
+
+    const remaining = MAX_IMAGES - images.length;
+    if (list.length > remaining) {
+      showToast('Chỉ có thể thêm tối đa ' + MAX_IMAGES + ' ảnh', true);
+      list.length = remaining;
+    }
+
+    uploadTxt.textContent = '⏳ Đang xử lý ảnh...';
+    for (const file of list) {
+      const dataUrl = await readFileAsDataURL(file);
+      images.push({ file, dataUrl });
+    }
+    renderPreview();
+    uploadTxt.textContent = defaultUploadTxt;
+  }
+
+  function renderPreview() {
+    previewGrid.innerHTML = '';
+    images.forEach((img, idx) => {
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+      const imageEl = document.createElement('img');
+      imageEl.src = img.dataUrl;
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button'; delBtn.className = 'del'; delBtn.textContent = '✕';
+      delBtn.addEventListener('click', () => { images.splice(idx, 1); renderPreview(); });
+      item.appendChild(imageEl); item.appendChild(delBtn); previewGrid.appendChild(item);
+    });
+    photoCount.textContent = images.length > 0 ? '📸 Đã chọn ' + images.length + '/' + MAX_IMAGES + ' ảnh' : '';
+  }
+
+  imageInput.addEventListener('change', async e => {
+    if (!e.target.files || !e.target.files.length) return;
+    await addFiles(e.target.files); e.target.value = '';
+  });
+
+  function resizeImage(file, maxW, maxH) {
+    maxW = maxW || 1000; maxH = maxH || 1000;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } }
+          else { if (h > maxH) { w *= maxH / h; h = maxH; } }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.75));
+        };
+        img.onerror = reject; img.src = ev.target.result;
+      };
+      reader.onerror = reject;
+    });
+  }
+
+  const form = $('evalForm');
+  const submitBtn = $('submitBtn');
+  const receipt = $('receipt');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const rec = RECIPIENTS[selRecipient.value];
+    const text = messageText.value.trim();
+    const mealEl = document.querySelector('input[name="meal"]:checked');
+    const meal = mealEl ? mealEl.value : 'Bữa ăn';
+
+    if (!rec) { showToast('Vui lòng chọn người nhận!', true); return; }
+    if (!rating) { showToast('Vui lòng chấm điểm!', true); return; }
+    if (images.length === 0) { showToast('Vui lòng chụp ít nhất 1 ảnh!', true); return; }
+    if (!text) { showToast('Vui lòng nhập nội dung!', true); return; }
+
+    submitBtn.disabled = true;
+    
+    const resizedImages = [];
+    for (let i = 0; i < images.length; i++) {
+      submitBtn.textContent = '⏳ Đang xử lý ảnh ' + (i + 1) + '/' + images.length + '...';
+      try {
+        const b64 = await resizeImage(images[i].file);
+        if (b64) resizedImages.push(b64);
+      } catch (err) { console.warn('Resize lỗi:', err); }
+    }
+
+    submitBtn.textContent = '⏳ Đang gửi đánh giá...';
+    const timeStr = fmtTime(new Date());
+    const rateInfo = '⭐'.repeat(rating) + ' (' + RATE[rating].label + ')';
+    
+    const fullText = 
+      '🍽️ ĐÁNH GIÁ CHẤT LƯỢNG BỮA ĂN\n' +
+      '━━━━━━━━━━━━━━\n' +
+      '• Bữa ăn: ' + meal + '\n' +
+      '• Chất lượng: ' + rateInfo + '\n' +
+      '• Thời gian: ' + timeStr + '\n' +
+      '• Số ảnh: ' + resizedImages.length + '\n' +
+      '━━━━━━━━━━━━━━\n' +
+      'NỘI DUNG GÓP Ý:\n' + text;
+
+    try {
+      const res = await fetch(PROXY_URL, {
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'submitEvaluation',
+          chatId: rec.id,
+          text: fullText,
+          images: resizedImages,
+          meal: meal,
+          rating: rating,
+          rate: rateInfo,
+          recipient: rec.name,
+          time: timeStr
+        })
+      });
+      
+      const result = await res.json();
+      console.log('[Submit Result]', result);
+
+      if (result.ok) {
+        onSuccess(rec, meal, rateInfo, new Date(), result.zaloSuccess, resizedImages.length);
+        if (result.log && result.log.length > 0) {
+          console.warn('Cảnh báo từ server:', result.log);
+        }
+      } else {
+        const errMsg = result.log && result.log.length > 0 ? result.log[0] : 'Không gửi được';
+        showToast('❌ Lỗi: ' + errMsg, true);
+      }
+    } catch (error) {
+      console.error('[Fetch Error]', error);
+      showToast('❌ Lỗi kết nối: ' + error.message, true);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '📨 Gửi đánh giá';
+    }
+  });
+
+  function onSuccess(rec, meal, rateInfo, sentTime, successCount, totalImages) {
+    $('rName').textContent = rec.name;
+    $('rTime').textContent = fmtTime(sentTime);
+    $('rMeal').textContent = meal;
+    $('rRate').textContent = rateInfo;
+    $('rImages').textContent = (successCount === totalImages) ? successCount + ' ảnh' : successCount + '/' + totalImages + ' ảnh';
+    receipt.hidden = false;
+    receipt.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    showToast('✅ Đã gửi đánh giá tới ' + rec.name + '!');
+
+    form.reset();
+    chips.forEach((c, i) => c.classList.toggle('active', i === 0));
+    resetStars();
+    charCount.textContent = '0';
+    images.length = 0;
+    renderPreview();
+    imageInput.value = '';
+    idHint.innerHTML = 'Bấm chọn để hệ thống tự xác định mã người nhận';
+  }
+
+  /* =========================================================
+     ADMIN
+     ========================================================= */
+  const adminModal = $('adminModal');
+  const previewOverlay = $('previewOverlay');
+
+  // Khóa cuộn nền khi mở Modal
+  function openAdminModal() {
+    adminModal.classList.add('show');
+    document.body.classList.add('no-scroll');
+    $('adminPwd').focus();
+  }
+
+  function closeAdminModal() {
+    adminModal.classList.remove('show');
+    $('adminPwd').value = '';
+    document.body.classList.remove('no-scroll');
+  }
+
+  $('adminTrigger').addEventListener('click', openAdminModal);
+  $('closeAdminModal').addEventListener('click', closeAdminModal);
+  adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdminModal(); });
+
+  // Cache blob HTML để tải về từ preview
+  let cachedReportBlob = null;
+  let cachedReportObjectURL = null;
+
+  async function fetchReportHTML(pwd) {
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'admin-download', password: pwd })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Lỗi không xác định');
+    return data;
+  }
+
+  // Nút "Xem trực tiếp"
+  $('adminPreviewBtn').addEventListener('click', async function () {
+    const pwd = $('adminPwd').value.trim();
+    if (!pwd) return showToast('Nhập mật khẩu', true);
+    const btn = this; btn.disabled = true;
+    const oldTxt = btn.textContent; btn.textContent = '⏳ Đang tải...';
+
+    try {
+      const data = await fetchReportHTML(pwd);
+      
+      // Giải phóng URL cũ nếu có
+      if (cachedReportObjectURL) {
+        try { URL.revokeObjectURL(cachedReportObjectURL); } catch(_) {}
+      }
+
+      cachedReportBlob = new Blob([data.html], { type: 'text/html;charset=utf-8' });
+      cachedReportObjectURL = URL.createObjectURL(cachedReportBlob);
+
+      $('previewFrame').src = cachedReportObjectURL;
+      $('previewTitle').textContent = '📊 Tổng hợp đánh giá (' + data.count + ')';
+      
+      // Đóng modal nhưng giữ nguyên no-scroll cho preview
+      adminModal.classList.remove('show');
+      $('adminPwd').value = '';
+      
+      previewOverlay.classList.add('show');
+    } catch (e) {
+      showToast('❌ ' + e.message, true);
+    } finally {
+      btn.disabled = false; btn.textContent = oldTxt;
+    }
+  });
+
+  // Nút "Tải file về máy" (trong modal)
+  $('adminDownloadBtn').addEventListener('click', async function () {
+    const pwd = $('adminPwd').value.trim();
+    if (!pwd) return showToast('Nhập mật khẩu', true);
+    const btn = this; btn.disabled = true;
+    const oldTxt = btn.textContent; btn.textContent = '⏳ Đang tải...';
+
+    try {
+      const data = await fetchReportHTML(pwd);
+      downloadBlob(new Blob([data.html], { type: 'text/html;charset=utf-8' }));
+      showToast('✅ Đã tải tổng hợp (' + data.count + ' đánh giá)');
+      closeAdminModal();
+    } catch (e) {
+      showToast('❌ ' + e.message, true);
+    } finally {
+      btn.disabled = false; btn.textContent = oldTxt;
+    }
+  });
+
+  // Nút "Tải về" từ preview
+  $('downloadFromPreview').addEventListener('click', () => {
+    if (!cachedReportBlob) return;
+    downloadBlob(cachedReportBlob);
+    showToast('✅ Đã tải file tổng hợp');
+  });
+
+  // Nút "Đóng" preview
+  $('closePreview').addEventListener('click', closePreview);
+
+  function closePreview() {
+    previewOverlay.classList.remove('show');
+    $('previewFrame').src = 'about:blank';
+    if (cachedReportObjectURL) {
+      try { URL.revokeObjectURL(cachedReportObjectURL); } catch(_) {}
+      cachedReportObjectURL = null;
+    }
+    cachedReportBlob = null;
+    
+    // Mở khóa cuộn nền
+    document.body.classList.remove('no-scroll');
+  }
+
+  // Đóng bằng ESC (dành cho máy tính)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (previewOverlay.classList.contains('show')) closePreview();
+      else if (adminModal.classList.contains('show')) closeAdminModal();
+    }
+  });
+
+  function downloadBlob(blob) {
+    const url = URL.createObjectURL(blob);
+    const d = new Date();
+    const name = 'tong-hop_' +
+      d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '_' +
+      pad(d.getHours()) + pad(d.getMinutes()) + '.html';
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
+  // Test Zalo
+  $('testZaloBtn').addEventListener('click', async function () {
+    const pwd = $('adminPwd').value.trim();
+    if (!pwd) return showToast('Nhập mật khẩu', true);
+    const btn = this; btn.disabled = true;
+    const oldTxt = btn.textContent; btn.textContent = '⏳ Đang test...';
+    try {
+      const res = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'test-zalo', password: pwd })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        let msg = 'KẾT QUẢ TEST ZALO\n\n';
+        for (const k in data.results) {
+          msg += '• ' + k.toUpperCase() + ': ' + (data.results[k].code ? 'Thành công (HTTP ' + data.results[k].code + ')' : 'LỖI') + '\n';
+        }
+        alert(msg);
+      } else {
+        showToast('❌ ' + data.error, true);
+      }
+    } catch (e) { 
+      showToast('❌ Lỗi: ' + e.message, true); 
+    }
+    finally { 
+      btn.disabled = false; btn.textContent = oldTxt; 
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
